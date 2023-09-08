@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="static/css/booksStyle.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <title>Books</title>
+</head>
+
+<body>
+  {{> navbar data=details}}
+  <h1 class="text-center pt-3 pb-4">Books Page</h1>
+  <div class="wholePage col-md-12">
+    <div class="side1">
+      <div class="upload-space">
+        <h2 class="pb-4">Convert Here</h2>
+        <input type="file" id="inpFile">
+        <button type="button" id="btnUpload">Upload</button>
+        <textarea id="textArea" style="height:100px;width:100%" hidden></textarea>
+        <br>
+        <select id="selectLang" style="width:150px;display: none;"></select>
+      </div>
+      <div class="card">
+        <div class="img-holder">
+          <img class="img1" src="/static/img/cardpic.jpg">
+        </div>
+        <div class="text">
+          <h2 id="book-name">.pdf to .mp3</h2>
+          <p id="success-msg"></p>
+        </div>
+        <div class="play-stop">
+          <div class="play-icon">
+            <div class="circle">
+              <button id="play-btn" class="btn">Play</button>
+            </div>
+          </div>
+          <div class="stop-icon">
+            <div class="circle">
+              <button id="stop-btn" class="btn">Stop</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{!-- footer section --}}
+  <footer class="footer background1 text-center py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          This is made by Rajesh Naidu
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- Optional JavaScript; choose one of the two! -->
+
+  <!-- Option 1: Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+  <!-- Option 2: Separate Popper and Bootstrap JS -->
+  <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    -->
+  <script>
+    const inpFile = document.getElementById('inpFile');
+    const btnUpload = document.getElementById('btnUpload');
+    const resultText = document.getElementById('textArea');
+    const book1 = document.getElementById('book1')
+
+    btnUpload.addEventListener("click", () => {
+      let fileName = inpFile.files[0].name;
+      document.getElementById("book-name").innerHTML = fileName;
+      document.getElementById("success-msg").innerHTML = "Audio is ready✅";
+      const formData = new FormData();
+      formData.append("pdfFile", inpFile.files[0])
+      fetch("/extract-text", {
+        method: "post",
+        body: formData
+      }).then(response => {
+        return response.text();
+      }).then(extarctedText => {
+        resultText.value = extarctedText
+      })
+    })
+  </script>
+  <script src="/static/js/script.js"></script>
+</body>
+
+</html>
